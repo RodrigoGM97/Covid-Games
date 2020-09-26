@@ -1,0 +1,16 @@
+amplify init --appId d34bdgud8kzmte
+
+name for project: covidgames
+env: dev
+default editor: vs code
+type of app: javascript
+javascript framework: react
+source directory path: src
+distribution directory path: build
+build command: npm run-script build
+start command: npm run-script start
+
+Set up new user?: Y
+
+AWS Region: us-east-1
+new IAM user: ADMIN
