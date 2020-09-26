@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-covidgames-dev-124437-authRole",
+      "UnauthRoleArn": "arn:aws:iam::005195598099:role/amplify-covidgames-dev-124437-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::005195598099:role/amplify-covidgames-dev-124437-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-covidgames-dev-124437-deployment",
+      "UnauthRoleName": "amplify-covidgames-dev-124437-unauthRole",
+      "StackName": "amplify-covidgames-dev-124437",
+      "StackId": "arn:aws:cloudformation:us-east-1:005195598099:stack/amplify-covidgames-dev-124437/f3fc0c60-001f-11eb-b89f-0ee443750bc7",
+      "AmplifyAppId": "d36hf8oynubu93"
+    },
+    "categories": {
+      "auth": {
+        "covidgames2c6c4935": {}
+      }
+    }
+  }
+}
