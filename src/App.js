@@ -10,6 +10,7 @@ Amplify.configure(awsExports);
 function App() {
   return (
     <div className="App">
+      <amplify-sign-out button-text="Sign Out"></amplify-sign-out>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -24,7 +25,9 @@ function App() {
           Learn React
         </a>
       </header>
+      
     </div>
+    
   );
 }
 
