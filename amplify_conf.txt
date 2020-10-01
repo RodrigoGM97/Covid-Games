@@ -1,1 +1,2 @@
 ADMIN: ADMIN123456
+AllmightyDB:AllmightyDBPassword
