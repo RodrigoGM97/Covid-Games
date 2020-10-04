@@ -1,0 +1,68 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "authcovidgamesUserPoolId": {
+            "Type": "String",
+            "Default": "authcovidgamesUserPoolId"
+        },
+        
+        "authcovidgamesAppClientID": {
+            "Type": "String",
+            "Default": "authcovidgamesAppClientID"
+        },
+        "authcovidgamesAppClientIDWeb": {
+            "Type": "String",
+            "Default": "authcovidgamesAppClientIDWeb"
+        },
+        "AuthRoleArn": {
+            "Type": "String"
+        },
+        "UnauthRoleArn": {
+            "Type": "String"
+        },
+        "env": {
+            "Type": "String"
+        }
+    },
+    "Conditions": {
+        "ShouldNotCreateEnvResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "env"
+                },
+                "NONE"
+            ]
+        }
+    },
+    "Resources": {
+    
+        "ADMINSGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "ADMINS",
+              "Precedence" : 1,
+              
+              "UserPoolId" : {
+                "Ref": "authcovidgamesUserPoolId"
+              } 
+            }
+        },
+        
+    
+        "USERSGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "USERS",
+              "Precedence" : 2,
+              
+              "UserPoolId" : {
+                "Ref": "authcovidgamesUserPoolId"
+              } 
+            }
+        },
+        
+    
+    
+    },
+    
+}

@@ -13,26 +13,110 @@
     }
   },
   "auth": {
-    "covidgames2c6c4935": {
+    "userPoolGroups": {
+      "service": "Cognito-UserPool-Groups",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "covidgames",
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID"
+          ]
+        }
+      ],
+      "lastPushTimeStamp": "2020-10-04T16:21:37.898Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/auth/template.json",
+        "logicalId": "authuserPoolGroups"
+      },
+      "output": {},
+      "lastPushDirHash": "Lgja8P7T4AC48PjjAHtedF1gTwg="
+    },
+    "covidgames": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false,
       "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/auth/covidgames2c6c4935-cloudformation-template.yml",
-        "logicalId": "authcovidgames2c6c4935"
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/auth/covidgames-cloudformation-template.yml",
+        "logicalId": "authcovidgames"
       },
-      "lastPushTimeStamp": "2020-09-26T18:33:22.607Z",
+      "lastPushTimeStamp": "2020-10-04T16:21:37.898Z",
       "output": {
-        "AppClientSecret": "1jhjdkkrnhsbgmc851a0s41uqdj7agpmjjij4bkmunhs7euq9lvs",
-        "UserPoolId": "us-east-1_8ugEcyU5f",
-        "AppClientIDWeb": "1k600ijpd8ct2jc5jcibfl1cva",
-        "AppClientID": "5a4kggb11544mmgfs4bno9s1vd",
-        "IdentityPoolId": "us-east-1:76d64236-b1c0-442e-882c-01f77a298fc9",
-        "IdentityPoolName": "covidgames2c6c4935_identitypool_2c6c4935__dev",
-        "UserPoolName": "covidgames2c6c4935_userpool_2c6c4935"
+        "AppClientSecret": "1pec4ed58rep93ihrgnntkc6tvuk7icqm0a4ic7v078hopau17r0",
+        "UserPoolId": "us-east-1_c3ygzROkN",
+        "AppClientIDWeb": "2p83lh719pqsnmr4rj8mjieunm",
+        "AppClientID": "2pkhfug6o671adl0odf26i45kf",
+        "UserPoolName": "covid-games-pool"
       },
-      "lastPushDirHash": "q7vNS0Ds/iPAHLpjc7fAy/O6+/4="
+      "lastPushDirHash": "1W2asERGWzoqn2eqQUTjunXBfDk="
+    }
+  },
+  "function": {
+    "AdminQueriesb10709fd": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "covidgames",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ],
+      "lastBuildTimeStamp": "2020-10-04T16:17:04.282Z",
+      "lastPackageTimeStamp": "2020-10-04T16:17:13.727Z",
+      "distZipFilename": "AdminQueriesb10709fd-356468336e786972444e-build.zip",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/function/AdminQueriesb10709fd-cloudformation-template.json",
+        "logicalId": "functionAdminQueriesb10709fd"
+      },
+      "lastPushTimeStamp": "2020-10-04T16:21:37.898Z",
+      "output": {
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:005195598099:function:AdminQueriesb10709fd-dev",
+        "Name": "AdminQueriesb10709fd-dev",
+        "LambdaExecutionRole": "AdminQueriesb10709fdLambdaRole-dev"
+      },
+      "lastPushDirHash": "L4w8nW6p/iBqNn9zixBY8uA7GBM="
+    }
+  },
+  "api": {
+    "AdminQueries": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "covidgames",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "AdminQueriesb10709fd",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        }
+      ],
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/api/admin-queries-cloudformation-template.json",
+        "logicalId": "apiAdminQueries"
+      },
+      "lastPushTimeStamp": "2020-10-04T16:21:37.898Z",
+      "output": {
+        "ApiName": "AdminQueries",
+        "RootUrl": "https://gnk42tgrk4.execute-api.us-east-1.amazonaws.com/dev"
+      },
+      "lastPushDirHash": "pCj9jQHm5nGp/qEkLPSd1m1PhkM="
     }
   }
 }

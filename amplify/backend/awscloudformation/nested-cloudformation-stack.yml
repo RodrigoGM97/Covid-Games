@@ -68,35 +68,72 @@
 				}
 			}
 		},
-		"authcovidgames2c6c4935": {
+		"authuserPoolGroups": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/auth/covidgames2c6c4935-cloudformation-template.yml",
+				"TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/auth/template.json",
 				"Parameters": {
-					"identityPoolName": "covidgames2c6c4935_identitypool_2c6c4935",
-					"allowUnauthenticatedIdentities": false,
-					"resourceNameTruncated": "covidg2c6c4935",
-					"userPoolName": "covidgames2c6c4935_userpool_2c6c4935",
+					"AuthRoleArn": {
+						"Fn::GetAtt": [
+							"AuthRole",
+							"Arn"
+						]
+					},
+					"UnauthRoleArn": {
+						"Fn::GetAtt": [
+							"UnauthRole",
+							"Arn"
+						]
+					},
+					"authcovidgamesUserPoolId": {
+						"Fn::GetAtt": [
+							"authcovidgames",
+							"Outputs.UserPoolId"
+						]
+					},
+					"authcovidgamesAppClientIDWeb": {
+						"Fn::GetAtt": [
+							"authcovidgames",
+							"Outputs.AppClientIDWeb"
+						]
+					},
+					"authcovidgamesAppClientID": {
+						"Fn::GetAtt": [
+							"authcovidgames",
+							"Outputs.AppClientID"
+						]
+					},
+					"env": "dev"
+				}
+			}
+		},
+		"authcovidgames": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/auth/covidgames-cloudformation-template.yml",
+				"Parameters": {
+					"resourceNameTruncated": "covidg5468cc75",
+					"userPoolName": "covid-games-pool",
 					"autoVerifiedAttributes": "email",
 					"mfaConfiguration": "OFF",
 					"mfaTypes": "SMS Text Message",
 					"smsAuthenticationMessage": "Your authentication code is {####}",
 					"smsVerificationMessage": "Your verification code is {####}",
-					"emailVerificationSubject": "Your verification code",
-					"emailVerificationMessage": "Your verification code is {####}",
+					"emailVerificationSubject": "CovidGames email verification",
+					"emailVerificationMessage": "Your verification code is: {####}",
 					"defaultPasswordPolicy": false,
 					"passwordPolicyMinLength": 8,
 					"passwordPolicyCharacters": "",
 					"requiredAttributes": "email",
 					"userpoolClientGenerateSecret": true,
-					"userpoolClientRefreshTokenValidity": 30,
+					"userpoolClientRefreshTokenValidity": "30",
 					"userpoolClientWriteAttributes": "email",
 					"userpoolClientReadAttributes": "email",
-					"userpoolClientLambdaRole": "covidg2c6c4935_userpoolclient_lambda_role",
+					"userpoolClientLambdaRole": "covidg5468cc75_userpoolclient_lambda_role",
 					"userpoolClientSetAttributes": false,
-					"sharedId": "2c6c4935",
-					"resourceName": "covidgames2c6c4935",
-					"authSelections": "identityPoolAndUserPool",
+					"sharedId": "5468cc75",
+					"resourceName": "covidgames",
+					"authSelections": "userPoolOnly",
 					"authRoleArn": {
 						"Fn::GetAtt": [
 							"AuthRole",
@@ -109,9 +146,13 @@
 							"Arn"
 						]
 					},
-					"useDefault": "default",
+					"useDefault": "manual",
+					"userPoolGroups": true,
+					"adminQueries": true,
 					"triggers": "{}",
-					"userPoolGroupList": "",
+					"hostedUI": false,
+					"userPoolGroupList": "ADMINS,USERS",
+					"adminQueryGroup": "ADMINS",
 					"serviceName": "Cognito",
 					"parentStack": {
 						"Ref": "AWS::StackId"
@@ -122,174 +163,52 @@
 				}
 			}
 		},
-		"UpdateRolesWithIDPFunction": {
-			"DependsOn": [
-				"AuthRole",
-				"UnauthRole",
-				"authcovidgames2c6c4935"
-			],
-			"Type": "AWS::Lambda::Function",
+		"functionAdminQueriesb10709fd": {
+			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"Code": {
-					"ZipFile": {
-						"Fn::Join": [
-							"\n",
-							[
-								"const response = require('cfn-response');",
-								"const aws = require('aws-sdk');",
-								"let responseData = {};",
-								"exports.handler = function(event, context) {",
-								"  try {",
-								"    let authRoleName = event.ResourceProperties.authRoleName;",
-								"    let unauthRoleName = event.ResourceProperties.unauthRoleName;",
-								"    let idpId = event.ResourceProperties.idpId;",
-								"    let promises = [];",
-								"    let authParamsJson = { 'Version': '2012-10-17','Statement': [{'Effect': 'Allow','Principal': {'Federated': 'cognito-identity.amazonaws.com'},'Action': 'sts:AssumeRoleWithWebIdentity','Condition': {'StringEquals': {'cognito-identity.amazonaws.com:aud': idpId},'ForAnyValue:StringLike': {'cognito-identity.amazonaws.com:amr': 'authenticated'}}}]};",
-								"    let unauthParamsJson = { 'Version': '2012-10-17','Statement': [{'Effect': 'Allow','Principal': {'Federated': 'cognito-identity.amazonaws.com'},'Action': 'sts:AssumeRoleWithWebIdentity','Condition': {'StringEquals': {'cognito-identity.amazonaws.com:aud': idpId},'ForAnyValue:StringLike': {'cognito-identity.amazonaws.com:amr': 'unauthenticated'}}}]};",
-								"    if (event.RequestType == 'Delete') {",
-								"        delete authParamsJson.Statement[0].Condition;",
-								"        delete unauthParamsJson.Statement[0].Condition;",
-								"        let authParams = { PolicyDocument: JSON.stringify(authParamsJson),RoleName: authRoleName};",
-								"        let unauthParams = {PolicyDocument: JSON.stringify(unauthParamsJson),RoleName: unauthRoleName};",
-								"        const iam = new aws.IAM({ apiVersion: '2010-05-08', region: event.ResourceProperties.region});",
-								"        promises.push(iam.updateAssumeRolePolicy(authParams).promise());",
-								"        promises.push(iam.updateAssumeRolePolicy(unauthParams).promise());",
-								"        Promise.all(promises)",
-								"         .then((res) => {",
-								"            console.log(\"delete response data\" + JSON.stringify(res));",
-								"            response.send(event, context, response.SUCCESS, {});",
-								"         });",
-								"    }",
-								"    if (event.RequestType == 'Update' || event.RequestType == 'Create') {",
-								"       const iam = new aws.IAM({ apiVersion: '2010-05-08', region: event.ResourceProperties.region});",
-								"        let authParams = { PolicyDocument: JSON.stringify(authParamsJson),RoleName: authRoleName};",
-								"        let unauthParams = {PolicyDocument: JSON.stringify(unauthParamsJson),RoleName: unauthRoleName};",
-								"        promises.push(iam.updateAssumeRolePolicy(authParams).promise());",
-								"        promises.push(iam.updateAssumeRolePolicy(unauthParams).promise());",
-								"        Promise.all(promises)",
-								"         .then((res) => {",
-								"            console.log(\"createORupdate\" + res);",
-								"            console.log(\"response data\" + JSON.stringify(res));",
-								"            response.send(event, context, response.SUCCESS, {});",
-								"         });",
-								"    }",
-								"  } catch(err) {",
-								"       console.log(err.stack);",
-								"       responseData = {Error: err};",
-								"       response.send(event, context, response.FAILED, responseData);",
-								"       throw err;",
-								"  }",
-								"};"
-							]
+				"TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/function/AdminQueriesb10709fd-cloudformation-template.json",
+				"Parameters": {
+					"authcovidgamesUserPoolId": {
+						"Fn::GetAtt": [
+							"authcovidgames",
+							"Outputs.UserPoolId"
 						]
-					}
-				},
-				"Handler": "index.handler",
-				"Runtime": "nodejs10.x",
-				"Timeout": "300",
-				"Role": {
-					"Fn::GetAtt": [
-						"UpdateRolesWithIDPFunctionRole",
-						"Arn"
-					]
+					},
+					"env": "dev"
 				}
 			}
 		},
-		"UpdateRolesWithIDPFunctionOutputs": {
-			"Type": "Custom::LambdaCallout",
+		"apiAdminQueries": {
+			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"ServiceToken": {
-					"Fn::GetAtt": [
-						"UpdateRolesWithIDPFunction",
-						"Arn"
-					]
-				},
-				"region": {
-					"Ref": "AWS::Region"
-				},
-				"idpId": {
-					"Fn::GetAtt": [
-						"authcovidgames2c6c4935",
-						"Outputs.IdentityPoolId"
-					]
-				},
-				"authRoleName": {
-					"Ref": "AuthRoleName"
-				},
-				"unauthRoleName": {
-					"Ref": "UnauthRoleName"
-				}
-			}
-		},
-		"UpdateRolesWithIDPFunctionRole": {
-			"Type": "AWS::IAM::Role",
-			"Properties": {
-				"RoleName": {
-					"Fn::Join": [
-						"",
-						[
-							{
-								"Ref": "AuthRoleName"
-							},
-							"-idp"
+				"TemplateURL": "https://s3.amazonaws.com/amplify-covidgames-dev-124437-deployment/amplify-cfn-templates/api/admin-queries-cloudformation-template.json",
+				"Parameters": {
+					"authRoleName": {
+						"Ref": "AuthRoleName"
+					},
+					"unauthRoleName": {
+						"Ref": "UnauthRoleName"
+					},
+					"authcovidgamesUserPoolId": {
+						"Fn::GetAtt": [
+							"authcovidgames",
+							"Outputs.UserPoolId"
 						]
-					]
-				},
-				"AssumeRolePolicyDocument": {
-					"Version": "2012-10-17",
-					"Statement": [
-						{
-							"Effect": "Allow",
-							"Principal": {
-								"Service": [
-									"lambda.amazonaws.com"
-								]
-							},
-							"Action": [
-								"sts:AssumeRole"
-							]
-						}
-					]
-				},
-				"Policies": [
-					{
-						"PolicyName": "UpdateRolesWithIDPFunctionPolicy",
-						"PolicyDocument": {
-							"Version": "2012-10-17",
-							"Statement": [
-								{
-									"Effect": "Allow",
-									"Action": [
-										"logs:CreateLogGroup",
-										"logs:CreateLogStream",
-										"logs:PutLogEvents"
-									],
-									"Resource": "arn:aws:logs:*:*:*"
-								},
-								{
-									"Effect": "Allow",
-									"Action": "iam:UpdateAssumeRolePolicy",
-									"Resource": {
-										"Fn::GetAtt": [
-											"AuthRole",
-											"Arn"
-										]
-									}
-								},
-								{
-									"Effect": "Allow",
-									"Action": "iam:UpdateAssumeRolePolicy",
-									"Resource": {
-										"Fn::GetAtt": [
-											"UnauthRole",
-											"Arn"
-										]
-									}
-								}
-							]
-						}
-					}
-				]
+					},
+					"functionAdminQueriesb10709fdArn": {
+						"Fn::GetAtt": [
+							"functionAdminQueriesb10709fd",
+							"Outputs.Arn"
+						]
+					},
+					"functionAdminQueriesb10709fdName": {
+						"Fn::GetAtt": [
+							"functionAdminQueriesb10709fd",
+							"Outputs.Name"
+						]
+					},
+					"env": "dev"
+				}
 			}
 		}
 	},
