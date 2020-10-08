@@ -20,11 +20,47 @@ import MailIcon from '@material-ui/icons/Mail';
 //User Info
 import { Auth } from 'aws-amplify'
 
-async function getUser() {
-    let user = await Auth.currentAuthenticatedUser();
-    console.log(user)
-    return user;
+class UserData extends React.Component {
+  constructor(props) {
+    //console.log("Printing my props : ", props);
+    super(props);
+
+    this.state = {
+      username: ''
+    };
+  }
+  async componentDidMount() {
+    this.setState(await this.getUserInfo());
+    //console.log("I will now be mounted: ", this.state);
+    
+     
+  }
+  async getUserInfo()
+    { 
+      //console.log("Setting user info");
+      let var1
+      return new Promise((resolve,reject)=>
+      {
+        var1 = Auth.currentAuthenticatedUser();
+        //console.log("en la promesa, ", var1)
+        resolve(var1);
+      }).then(userinfo=>{
+        return userinfo;
+      })
+      //return await user.username;
+
+  }
+  render(){
+    return(
+      <p>{this.state.username}</p>
+    )
+  }
+
 }
+
+
+
+
 
 const useStyles_Drawer = makeStyles({
     list: {
@@ -47,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-function Navbar () {
+ function Navbar () {
     const classes = useStyles();
     const classes_Drawer = useStyles_Drawer();
     const [state, setState] = React.useState({
@@ -56,6 +92,7 @@ function Navbar () {
         bottom: false,
         right: false,
     });
+    
     const toggleDrawer = (anchor, open) => (event) => {
         if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
           return;
@@ -83,38 +120,37 @@ function Navbar () {
           </List>
         </div>
       );
-    
-    let currentUser = getUser();
-    //console.log(currentUser)  
 
+    //console.log("afuera del then" + value)  
     return(
-        <div className="Appbar">
-            <AppBar position="static" color="#fffde7">
-            <Toolbar>
-                <div>
-                    <React.Fragment key='left'>
-                    <SwipeableDrawer
-                        anchor='left'
-                        open={state['left']}
-                        onClose={toggleDrawer('left', false)}
-                        onOpen={toggleDrawer('left', true)}
-                    >
-                        {list('left')}
-                    </SwipeableDrawer>
-                    </React.Fragment>
-                </div>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={toggleDrawer('left', true)}>
-                <MenuIcon />
-                </IconButton>
-                <Typography variant="h6" className={classes.title}>Hola</Typography>
-                <amplify-sign-out button-text="Sign Out"></amplify-sign-out>
-            </Toolbar>
-            </AppBar>
-        </div>
-        
-        
+      <div className="Appbar">
+          <AppBar position="static" color="#fffde7">
+          <Toolbar>
+              <div>
+                  <React.Fragment key='left'>
+                  <SwipeableDrawer
+                      anchor='left'
+                      open={state['left']}
+                      onClose={toggleDrawer('left', false)}
+                      onOpen={toggleDrawer('left', true)}
+                  >
+                      {list('left')}
+                  </SwipeableDrawer>
+                  </React.Fragment>
+              </div>
+              <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={toggleDrawer('left', true)}>
+              <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" className={classes.title}><UserData></UserData></Typography>
+              <amplify-sign-out button-text="Sign Out"></amplify-sign-out>
+          </Toolbar>
+          </AppBar>
+      </div>
+      
+      
 
-    );
+  );
+    
 }
 
 export default Navbar;
