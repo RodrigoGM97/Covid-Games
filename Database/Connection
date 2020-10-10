@@ -1,0 +1,8 @@
+User: ADMIN
+Pass: ADMIN123456
+
+Hostname: allmightydb.c3kp0won1ead.us-east-1.rds.amazonaws.com
+Port: 1521
+Sid: ORCL
+
+Nota: En windows es necesario habilitar el puerto 1521 para Outgoing connections.
