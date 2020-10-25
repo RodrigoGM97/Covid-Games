@@ -17,6 +17,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
+import { Link } from 'react-router-dom';
+
 //User Info
 import { Auth } from 'aws-amplify'
 
@@ -57,10 +59,6 @@ class UserData extends React.Component {
   }
 
 }
-
-
-
-
 
 const useStyles_Drawer = makeStyles({
     list: {
@@ -114,7 +112,8 @@ const useStyles = makeStyles((theme) => ({
             {['My Profile', 'My seasons', 'Available Seassons', 'Drafts'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={text}><Link to="/Profile"></Link></ListItemText>
+                
               </ListItem>
             ))}
           </List>
