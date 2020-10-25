@@ -1,0 +1,26 @@
+Steps to connect to oracle database
+
+1.import cx_Oracle module in Kali linux
+https://pypi.org/project/cx-Oracle/#files
+
+Use this to go to Desktop directory /mnt/c/users/"Sathya R"/Desktop
+sudo apt install python3-pip
+sudo pip3 install virtualenv
+virtualenv oraclelambda
+source oraclelambda/bin/activate
+pip3 install cx_Oracle-7.3.0-cp38-cp38-manylinux1_x86_64.whl
+
+
+2.Download Instantclient18.5 BasicLite
+https://www.oracle.com/in/database/technologies/instant-client/linux-x86-64-downloads.html
+
+3.Download libiao.so.1
+https://pkgs.org/download/libaio
+sudo apt-get install rpm2cpio
+rpm2cpio lib64aio1-0.3.111-1pclos2018.x86_64.rpm | cpio -idmv
+
+4.Create a python file to connect to database
+5.create a TNSnames.ora file to access to database
+6.create a lambda function
+7.Upload the zip file to s3
+8.copy the s3 path to lambda and run the zip file
