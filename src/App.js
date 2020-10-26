@@ -19,7 +19,7 @@ function App() {
     <BrowserRouter>
       <div>
         <Route exact path='/' component={Home} />
-        <Route exact path='/Profile' component={Profile} />
+        <Route exact path='/My Profile' component={Profile} />
       </div>
     </BrowserRouter>
        

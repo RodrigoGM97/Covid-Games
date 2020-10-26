@@ -109,11 +109,10 @@ const useStyles = makeStyles((theme) => ({
           onKeyDown={toggleDrawer(anchor, false)}
         >
           <List>
-            {['My Profile', 'My seasons', 'Available Seassons', 'Drafts'].map((text, index) => (
+            {['My Profile', 'My seasons', 'Suscribe to Seasons', 'My season summary'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text}><Link to="/Profile"></Link></ListItemText>
-                
+                <ListItem button component={Link} to={'/'+text}>{text}</ListItem>
               </ListItem>
             ))}
           </List>
