@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import { Button } from '@material-ui/core';
 
 function createData(startDate, points, daysRemaining) {
   return { startDate, points, daysRemaining };
@@ -66,6 +67,7 @@ const headCells = [
   { id: 'startDate', numeric: true, disablePadding: false, label: 'Start Date' },
   { id: 'points', numeric: true, disablePadding: false, label: 'Points' },
   { id: 'daysRemaining', numeric: true, disablePadding: false, label: 'Days remaining' },
+  { id: 'Suscribe', numeric: true, disablePadding: false, label: '' },
 ];
 
 function EnhancedTableHead(props) {
@@ -281,6 +283,9 @@ function EnhancedTable() {
                       </TableCell>
                       <TableCell align="center">{row.points}</TableCell>
                       <TableCell align="center">{row.daysRemaining}</TableCell>
+                      <TableCell>
+                        <Button variant="contained" color="primary">Suscribe</Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
