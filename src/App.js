@@ -8,8 +8,10 @@ import { BrowserRouter, Route } from 'react-router-dom';
 
 import './App.css';
 
-import Home from './Home/Home'
-import Profile from './Profile/Profile'
+import Home from './Home/Home';
+import Profile from './Profile/Profile';
+import suscribeSeason from './suscribeSeason/suscribeSeason';
+
 
 
 Amplify.configure(awsExports);
@@ -20,6 +22,7 @@ function App() {
       <div>
         <Route exact path='/' component={Home} />
         <Route exact path='/My Profile' component={Profile} />
+        <Route exact path='/Suscribe to Seasons' component={suscribeSeason} />
       </div>
     </BrowserRouter>
        
