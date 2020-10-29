@@ -21,6 +21,10 @@ function createData(startDate, points, daysRemaining) {
   return { startDate, points, daysRemaining };
 }
 
+function susribeToSeason(row) {
+  console.log(row)
+}
+
 const rows = [
   createData('Cupcake', 305, 3.7, 67, 4.3),
   createData('Donut', 452, 25.0, 51, 4.9),
@@ -186,6 +190,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 function EnhancedTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
@@ -284,7 +290,7 @@ function EnhancedTable() {
                       <TableCell align="center">{row.points}</TableCell>
                       <TableCell align="center">{row.daysRemaining}</TableCell>
                       <TableCell>
-                        <Button variant="contained" color="primary">Suscribe</Button>
+                        <Button variant="contained" color="primary" onClick={() => susribeToSeason(row)}>Suscribe</Button>
                       </TableCell>
                     </TableRow>
                   );
