@@ -17,8 +17,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { Button } from '@material-ui/core';
 
-function createData(startDate, points, daysRemaining) {
-  return { startDate, points, daysRemaining };
+function createData(startDate, points, topic, daysRemaining) {
+  return { startDate, points, topic, daysRemaining };
 }
 
 function susribeToSeason(row) {
@@ -71,6 +71,7 @@ const headCells = [
   { id: 'startDate', numeric: true, disablePadding: false, label: 'Start Date' },
   { id: 'points', numeric: true, disablePadding: false, label: 'Points' },
   { id: 'daysRemaining', numeric: true, disablePadding: false, label: 'Days remaining' },
+  { id: 'topic', numeric: true, disablePadding: false, label: 'Topic' },
   { id: 'Suscribe', numeric: true, disablePadding: false, label: '' },
 ];
 
@@ -259,6 +260,7 @@ function EnhancedTable() {
                         {row.startDate}
                       </TableCell>
                       <TableCell align="center">{row.points}</TableCell>
+                      <TableCell align="center">{row.topic}</TableCell>
                       <TableCell align="center">{row.daysRemaining}</TableCell>
                       <TableCell>
                         <Button variant="contained" color="primary" onClick={() => susribeToSeason(row)}>Suscribe</Button>
