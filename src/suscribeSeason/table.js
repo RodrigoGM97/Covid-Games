@@ -168,7 +168,10 @@ EnhancedTableToolbar.propTypes = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: 'auto',
+    marginLeft: theme.spacing(5),
+    marginRight: theme.spacing(5),
+    marginTop: theme.spacing(5)
   },
   paper: {
     width: '100%',
@@ -176,8 +179,6 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 750,
-    width: "50%",
-    marginLeft:"20%",
   },
   menuItem: {
     width:"50%",
