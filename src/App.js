@@ -11,6 +11,8 @@ import './App.css';
 import Home from './Home/Home';
 import Profile from './Profile/Profile';
 import suscribeSeason from './suscribeSeason/suscribeSeason';
+import MySeasons from './MySeasons/MySeasons';
+import Summary from './SeasonSummary/Summary';
 
 
 
@@ -23,6 +25,8 @@ function App() {
         <Route exact path='/' component={Home} />
         <Route exact path='/My Profile' component={Profile} />
         <Route exact path='/Suscribe to Seasons' component={suscribeSeason} />
+        <Route exact path='/My Seasons' component={MySeasons} />
+        <Route exact path='/My Season Summary' component={Summary} />
       </div>
     </BrowserRouter>
        
