@@ -10,10 +10,14 @@ import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650,
-    width: '50%',
-    marginLeft:'26%',
+    
   },
+  DivTable: {
+    width:'auto',
+    marginLeft: "20%",
+    marginRight: "20%",
+    marginTop: "5%",
+  }
 });
 
 function createData(name, content) {
@@ -32,25 +36,21 @@ export default function DenseTable() {
   const classes = useStyles();
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="center">{row.content}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div className={classes.DivTable}>
+      <TableContainer component={Paper}>
+        <Table className={classes.table} size="small" aria-label="a dense table">
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.name}>
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                <TableCell align="center">{row.content}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
