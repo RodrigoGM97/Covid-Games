@@ -69,8 +69,8 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'startDate', numeric: true, disablePadding: false, label: 'Start Date' },
-  { id: 'daysRemaining', numeric: true, disablePadding: false, label: 'Days remaining' },
   { id: 'topic', numeric: true, disablePadding: false, label: 'Topic' },
+  { id: 'daysRemaining', numeric: true, disablePadding: false, label: 'Days remaining' },
   { id: 'Suscribe', numeric: true, disablePadding: false, label: '' },
 ];
 
