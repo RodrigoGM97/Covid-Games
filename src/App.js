@@ -22,7 +22,7 @@ function App() {
   return (
     <BrowserRouter>
       <div>
-        <Route exact path='/' component={Home} />
+        <Route exact path='/' component={Profile} />
         <Route exact path='/My Profile' component={Profile} />
         <Route exact path='/Suscribe to Seasons' component={suscribeSeason} />
         <Route exact path='/My Seasons' component={MySeasons} />
