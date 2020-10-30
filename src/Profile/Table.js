@@ -42,7 +42,7 @@ export default function DenseTable() {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow >
+            <TableRow key={row.name}>
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>

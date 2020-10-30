@@ -176,6 +176,11 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 750,
+    width: "50%",
+    marginLeft:"20%",
+  },
+  menuItem: {
+    width:"50%",
   },
   visuallyHidden: {
     border: 0,

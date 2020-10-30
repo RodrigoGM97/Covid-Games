@@ -6,7 +6,7 @@ function Profile_picture() {
     return (
       <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', marginTop:'15px'}}>
         <img
-          img src={Picture} alt="Profile pictyre" className="center"
+          src={Picture} alt="Profile picture" className="center"
           height={'20%'}
           width={'20%'}
         />
