@@ -17,8 +17,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { Button } from '@material-ui/core';
 
-function createData(startDate, points, topic, daysRemaining) {
-  return { startDate, points, topic, daysRemaining };
+function createData(startDate, topic, daysRemaining) {
+  return { startDate, topic, daysRemaining };
 }
 
 function susribeToSeason(row) {
@@ -69,7 +69,6 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'startDate', numeric: true, disablePadding: false, label: 'Start Date' },
-  { id: 'points', numeric: true, disablePadding: false, label: 'Points' },
   { id: 'daysRemaining', numeric: true, disablePadding: false, label: 'Days remaining' },
   { id: 'topic', numeric: true, disablePadding: false, label: 'Topic' },
   { id: 'Suscribe', numeric: true, disablePadding: false, label: '' },
@@ -155,7 +154,7 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-          Suscribed Seasons
+          Suscribe to Seasons
         </Typography>
       )}
 
@@ -259,7 +258,6 @@ function EnhancedTable() {
                       <TableCell component="th" id={labelId} scope="row" align="center">
                         {row.startDate}
                       </TableCell>
-                      <TableCell align="center">{row.points}</TableCell>
                       <TableCell align="center">{row.topic}</TableCell>
                       <TableCell align="center">{row.daysRemaining}</TableCell>
                       <TableCell>
