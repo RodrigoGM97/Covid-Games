@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
     //console.log("afuera del then" + value)  
     return(
       <div className="Appbar">
-          <AppBar position="static" color="#fffde7">
+          <AppBar position="static" color="default">
           <Toolbar>
               <div>
                   <React.Fragment key='left'>
