@@ -17,8 +17,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { Button } from '@material-ui/core';
 
-function createData(topic, points, daysRemaining) {
-  return { topic, points, daysRemaining };
+function createData(topic, points, daysRemaining, seasonID) {
+  return { topic, points, daysRemaining, seasonID };
 }
 
 function susribeToSeason(row) {
@@ -259,7 +259,7 @@ function EnhancedTable() {
                   return (
                     <TableRow
                       hover
-                      key={row.startDate}
+                      key={row.topic}
                     >
                       <TableCell component="th" id={labelId} scope="row" align="center">
                         {row.topic}

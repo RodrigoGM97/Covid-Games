@@ -17,8 +17,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { Button } from '@material-ui/core';
 
-function createData(startDate, endDate, topic, points) {
-  return { startDate, endDate, topic, points };
+function createData(startDate, endDate, topic, points, seasonID) {
+  return { startDate, endDate, topic, points, seasonID };
 }
 
 function susribeToSeason(row) {
