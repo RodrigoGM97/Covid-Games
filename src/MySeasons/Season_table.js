@@ -139,14 +139,14 @@ async function dataToRow() {
   let data = new TableData();
   let promiseData = data.fetchData()
   promiseData.then((value) => {
-    console.log(value);
+    //console.log(value);
     for (const row of value)
     {
       rows.push(row)
     }
 
     //rows.push(value)
-    console.log("Hola",rows)  
+    //console.log("Hola",rows)  
   })
   
   return await true;
