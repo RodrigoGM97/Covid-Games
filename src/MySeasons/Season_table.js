@@ -103,69 +103,7 @@ class TableData extends React.Component {
     this.state = {
       rowInfo : []
     }
-    this.styles = {
-      root: {
-        width: 'auto'
-      },
-      paper: {
-        width: '100%'
-      },
-      table: {
-        minWidth: 750,
-      },
-      menuItem: {
-        width:"50%",
-      },
-      visuallyHidden: {
-        border: 0,
-        clip: 'rect(0 0 0 0)',
-        height: 1,
-        margin: -1,
-        overflow: 'hidden',
-        padding: 0,
-        position: 'absolute',
-        top: 20,
-        width: 1,
-      }
-    }
     
-  }
-  testReturn(){
-
-    return(
-    <div width = '100%'>
-    <div width = '80%'>
-      <Paper className={this.styles.paper}>
-      <TableContainer>
-        <Table  className = {this.styles.table} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell align = "center">Topic</TableCell>
-              <TableCell align="center">Score</TableCell>
-              <TableCell align="center">Days Remaining</TableCell>
-              <TableCell align="center"></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.state.rowInfo.map((row) => (
-              <TableRow key={row.seasonID}>
-                <TableCell align = "center" component="th" scope="row">
-                  {row.topic}
-                </TableCell>
-                <TableCell align="center">{row.points}</TableCell>
-
-                <TableCell align="center">{row.daysRemaining}</TableCell>
-                <TableCell>
-                  <Button variant="contained" color="primary" onClick={() => susribeToSeason(row)}>Play</Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      </Paper>
-    </div>
-    </div>);
   }
   async componentDidMount()
   {
@@ -184,13 +122,6 @@ class TableData extends React.Component {
     });
     return await info;
   }
-
-  render(){
-    
-    return(
-      this.testReturn()
-     );
-  }
 }
 
 function createData(topic, points, daysRemaining, seasonID) {
@@ -200,11 +131,8 @@ function createData(topic, points, daysRemaining, seasonID) {
 function susribeToSeason(row) {
   console.log(row)
 }
-//const rows2 = createRows(createRowArray().then(data=>{return data}));
 
-//const rows = createRowArray().then(data=>{return data});
 const rows = [];
-
 
 async function dataToRow() {
   
@@ -396,9 +324,10 @@ const useStyles = makeStyles((theme) => ({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [test, setTest] = React.useState(0);
   
     useEffect(() => {
-      setOrderBy();
+      setTest();
   });
 
   const handleRequestSort = (event, property) => {
