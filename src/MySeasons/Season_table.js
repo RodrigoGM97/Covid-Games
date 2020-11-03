@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -16,6 +16,182 @@ import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { Button } from '@material-ui/core';
+import axios from 'axios';
+import { Auth } from 'aws-amplify';
+import { render } from '@testing-library/react';
+
+
+class UserData extends React.Component {
+  constructor(props) {
+    //console.log("Printing my props : ", props);
+    super(props);
+
+    this.state = {
+      username: ''
+    };
+  }
+  async getUserInfo()
+    { 
+      //console.log("Setting user info");
+      let var1
+      return new Promise((resolve,reject)=>
+      {
+        var1 = Auth.currentAuthenticatedUser();
+        //console.log("en la promesa, ", var1)
+        resolve(var1);
+      }).then(userinfo=>{
+        return userinfo.username;
+      })
+      //return await user.username;
+
+  }
+  async  printUserData()
+  {
+    //console.log(await test_obj.getUserInfo());
+    return await this.getUserInfo().then((username)=>{
+      //console.log("The username is " + username);
+      return username;
+    })
+  }
+  async fetchdata()
+  {
+    var obj_data = 
+    {
+      "triggerSource": "testTrigger",
+      "userPoolId": "testPool",
+      "userName": await this.printUserData().then((data)=>{return data}),
+      "callerContext": {
+        "clientId": "12345"
+      },
+      "response": {}
+    }
+
+    //console.log(await obj_data);
+    return await axios.post('https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Tables/getMySeasonTable', await obj_data ).then(resp => {
+            //console.log("My msg answer was ", resp.data);
+            
+            return resp.data;
+
+            }).catch(error =>{console.log(error)});   
+  }
+
+  async  createRowArray(){
+    let data = await this.fetchdata().then(info=>{
+      return info;
+    })
+    //console.log("my data was: ", JSON.parse(data));
+    let row_data =  await JSON.parse(data);
+    return await this.createRows(await row_data);
+  }
+   createRows(data){
+    var row_info =[];
+    for (const row of data)
+    {
+      row_info.push(createData(row.TOPIC, row.SCORE, row.DAYS_REMAINING, row.PERIOD_ID))
+      //console.log("My row: ", row);
+    }
+    //console.log("My ending row data: ", row_info);
+
+    return row_info;
+  }
+}
+
+class TableData extends React.Component {
+  constructor(props) {
+    //console.log("Printing my props : ", props);
+    super(props);
+    this.state = {
+      rowInfo : []
+    }
+    this.styles = {
+      root: {
+        width: 'auto'
+      },
+      paper: {
+        width: '100%'
+      },
+      table: {
+        minWidth: 750,
+      },
+      menuItem: {
+        width:"50%",
+      },
+      visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+      }
+    }
+    
+  }
+  testReturn(){
+
+    return(
+    <div width = '100%'>
+    <div width = '80%'>
+      <Paper className={this.styles.paper}>
+      <TableContainer>
+        <Table  className = {this.styles.table} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell align = "center">Topic</TableCell>
+              <TableCell align="center">Score</TableCell>
+              <TableCell align="center">Days Remaining</TableCell>
+              <TableCell align="center"></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.state.rowInfo.map((row) => (
+              <TableRow key={row.seasonID}>
+                <TableCell align = "center" component="th" scope="row">
+                  {row.topic}
+                </TableCell>
+                <TableCell align="center">{row.points}</TableCell>
+
+                <TableCell align="center">{row.daysRemaining}</TableCell>
+                <TableCell>
+                  <Button variant="contained" color="primary" onClick={() => susribeToSeason(row)}>Play</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      </Paper>
+    </div>
+    </div>);
+  }
+  async componentDidMount()
+  {
+      console.log("Estoy en el componentDidMount");
+      let bringInfo  = await this.fetchData().then(data=>{return data});
+      console.log("Bring info tiene: ", bringInfo);
+      this.setState({'rowInfo': await bringInfo});
+      
+      console.log("my state: ", this.state);
+  }
+  async fetchData()
+  {
+    let fetch_obj = new UserData();
+    let info = await fetch_obj.createRowArray().then(data=>{
+      return data;
+    });
+    return await info;
+  }
+
+  render(){
+    
+    return(
+      this.testReturn()
+     );
+  }
+}
 
 function createData(topic, points, daysRemaining, seasonID) {
   return { topic, points, daysRemaining, seasonID };
@@ -24,22 +200,32 @@ function createData(topic, points, daysRemaining, seasonID) {
 function susribeToSeason(row) {
   console.log(row)
 }
+//const rows2 = createRows(createRowArray().then(data=>{return data}));
 
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
-];
+//const rows = createRowArray().then(data=>{return data});
+const rows = [];
+
+
+async function dataToRow() {
+  
+  let data = new TableData();
+  let promiseData = data.fetchData()
+  promiseData.then((value) => {
+    console.log(value);
+    for (const row of value)
+    {
+      rows.push(row)
+    }
+
+    //rows.push(value)
+    console.log("Hola",rows)  
+  })
+  
+  return await true;
+}
+dataToRow()
+
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -198,7 +384,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-function EnhancedTable() {
+//export default TableData;
+
+
+ function EnhancedTable() {
+  
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('Points');
@@ -206,7 +396,7 @@ function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -230,9 +420,11 @@ function EnhancedTable() {
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  
+
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper} >
+      <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length}  />
         <TableContainer>
           <Table
@@ -255,7 +447,7 @@ function EnhancedTable() {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                
                   return (
                     <TableRow
                       hover
