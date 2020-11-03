@@ -1,0 +1,7 @@
+MYSERVICE = (DESCRIPTION=
+	(ADDRESS=
+		(PROTOCOL=tcp)
+		(HOST=database-1.cinyqcgle6fn.us-east-1.rds.amazonaws.com)
+		(PORT=1521))
+	(CONNECT_DATA=
+		(SERVICE_NAME=orcl)))
