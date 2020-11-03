@@ -8,7 +8,6 @@ import { BrowserRouter, Route } from 'react-router-dom';
 
 import './App.css';
 
-import Home from './Home/Home';
 import Profile from './Profile/Profile';
 import suscribeSeason from './suscribeSeason/suscribeSeason';
 import MySeasons from './MySeasons/MySeasons';
