@@ -83,7 +83,7 @@ class UserData extends React.Component {
     var row_info =[];
     for (const row of data)
     {
-      row_info.push(createData(row.START_DATE, row.END_DATE, row.TOPIC, row.SCORE))
+      row_info.push(createData(row.START_DATE, row.END_DATE, row.TOPIC, row.SCORE, row.PERIOD_ID))
       //console.log("My row: ", row);
     }
     //console.log("My ending row data: ", row_info);
@@ -347,7 +347,7 @@ function EnhancedTable() {
                   return (
                     <TableRow
                       hover
-                      key={row.startDate}
+                      key={row.seasonID}
                     >
                       <TableCell component="th" id={labelId} scope="row" align="center">
                         {row.startDate}

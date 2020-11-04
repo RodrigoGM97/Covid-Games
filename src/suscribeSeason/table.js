@@ -17,6 +17,7 @@ import Switch from '@material-ui/core/Switch';
 import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { Auth } from 'aws-amplify';
+import {useHistory} from 'react-router-dom';
 
 class UserData extends React.Component {
   constructor(props) {
@@ -65,7 +66,7 @@ class UserData extends React.Component {
 
     //console.log(await obj_data);
     return await axios.post('https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Tables/getSusSeasonTable', await obj_data ).then(resp => {
-            //console.log("My msg answer was ", resp.data);
+            console.log("My msg answer was ", resp.data);
             
             return resp.data;
 
@@ -84,7 +85,7 @@ class UserData extends React.Component {
     var row_info =[];
     for (const row of data)
     {
-      row_info.push(createData(row.START_DATE, row.TOPIC, row.DAYS_REMAINING))
+      row_info.push(createData(row.START_DATE, row.TOPIC, row.DAYS_REMAINING, row.PERIOD_ID))
       //console.log("My row: ", row);
     }
     //console.log("My ending row data: ", row_info);
@@ -125,14 +126,35 @@ function createData(startDate, topic, daysRemaining, seasonID) {
   return { startDate, topic, daysRemaining, seasonID };
 }
 
-function susribeToSeason(row) {
-  console.log(row)
+async function suscribeToSeason(row) {
+  let user = new UserData();
+  var obj_data = 
+    {
+      "triggerSource": "testTrigger",
+      "userPoolId": "testPool",
+      "userName": await user.printUserData().then((data)=>{return data}),
+      "periodID": row.seasonID,
+      "callerContext": {
+        "clientId": "12345"
+      },
+      "response": {}
+    }
+  console.log("About to insert: ", await obj_data);
+   
+   return await axios.post('https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/subscribeplayertoseason', await obj_data ).then(resp => {
+            console.log("My msg answer was ", resp.data);
+            dataToRow();
+            window.location = '/My seasons';
+            return resp.data;
+
+            }).catch(error =>{console.log(error)});   
+    
 }
 
-const rows = [];
+var rows = [];
 
 async function dataToRow() {
-  
+  rows = []
   let data = new TableData();
   let promiseData = data.fetchData()
   promiseData.then((value) => {
@@ -322,7 +344,7 @@ function EnhancedTable() {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
-  
+
   var emptyRows = test;
   emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -361,7 +383,7 @@ function EnhancedTable() {
                       <TableCell align="center">{row.topic}</TableCell>
                       <TableCell align="center">{row.daysRemaining}</TableCell>
                       <TableCell>
-                        <Button variant="contained" color="primary" onClick={() => susribeToSeason(row)}>Suscribe</Button>
+                        <Button variant="contained" color="primary" onClick={() => suscribeToSeason(row)}>Suscribe</Button>
                       </TableCell>
                     </TableRow>
                   );

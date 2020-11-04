@@ -126,8 +126,9 @@ function createData(topic, points, daysRemaining, seasonID) {
   return { topic, points, daysRemaining, seasonID };
 }
 
-function susribeToSeason(row) {
+async function susribeToSeason(row) {
   console.log(row)
+  
 }
 
 const rows = [];
