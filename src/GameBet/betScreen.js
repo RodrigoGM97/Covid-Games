@@ -6,11 +6,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
 import TableRow from '@material-ui/core/TableRow';
+import Box from '@material-ui/core/Box'; 
 
 class BetScreen extends React.Component {
     constructor(props) {
         super(props);
- 
+        this.isbetting=true;
         this.state = {
             score: 1,
 
@@ -30,18 +31,54 @@ class BetScreen extends React.Component {
 
             }).catch(error =>{console.log(error)});    
     }
+    ChooseOption(qty)
+    {
+        localStorage.setItem('betQty', qty);
+        let score_ = this.state.score;
+        this.isbetting = false;
+        this.setState({score:score_,});
+        console.log("my state is now: ", this.state);
+
+    }
+    FinishQuestion(answer)
+    {
+        //query para saber si es correcta
+        let correct = 1; //query
+        let result = (correct == answer);
+        if (result)
+        {
+            //sumar puntos en base
+            
+            // fetchear nuevo score
+            let new_score = 100;
+            //actualizar state con score. 
+            this.isbetting=true;
+            
+            this.setState({score:new_score})
+        }
+        else
+        {
+            //sumar puntos en base
+            
+            // fetchear nuevo score
+            let new_score = 40;
+            //actualizar state con score. 
+            this.isbetting=true;
+            
+            this.setState({score:new_score})
+        }
+        
+    }
+
     async componentDidMount(){
         let userinfo = await this.getUserScore();
-        
         this.setState({score: await userinfo[0].SCORE});
     }
 
-    ChooseOption(qty)
-    {
-
-    }
+    
 
     render() {
+
         const mystyle = {
             width:'auto',
             marginLeft: "30%",
@@ -60,8 +97,15 @@ class BetScreen extends React.Component {
             display:'block',
             alignItems:'center'
         };
-
-        return (
+        const buttonstyle={
+            width:'100%',
+            height:'100%'
+        }
+        const answerstyle = {
+            height:'100%',
+            //'background-color':'cyan'
+        }
+        return (this.isbetting)?(
             <div style = {mystyle}>
                 <div style = {titlestyle}>
                     <h1>Choose an amount to bet:</h1>
@@ -72,17 +116,17 @@ class BetScreen extends React.Component {
                     <TableBody>
                         <TableRow key='Buttons' >
                             <TableCell style = {rowstyle} align = "center"> 
-                                <Button variant="outlined" color="primary">
+                                <Button onClick={() => this.ChooseOption(0)} variant="outlined" color="primary">
                                     0 pts
                                 </Button>
                             </TableCell>
                             <TableCell style = {rowstyle} align = "center"> 
-                                <Button variant="outlined" color="primary" disabled = {this.state.score<1}>
+                                <Button onClick={() => this.ChooseOption(1)}  variant="outlined" color="primary" disabled = {this.state.score<1}>
                                     1 pts
                                 </Button>
                             </TableCell>
                             <TableCell style = {rowstyle} align = "center"> 
-                                <Button variant="outlined" color="primary" disabled = {this.state.score<2}>
+                                <Button onClick={() => this.ChooseOption(2)} variant="outlined" color="primary" disabled = {this.state.score<2}>
                                     2 pts
                                 </Button>
                             </TableCell>
@@ -104,6 +148,45 @@ class BetScreen extends React.Component {
                 </TableContainer>
             </div>
            
+        ):(
+            <div className = "full-screen">
+                <p>game time</p>
+                <TableContainer>
+                    <Table  size="small" aria-label="a dense table">
+                    <TableBody>
+                        <TableRow key='Buttons' >
+                            <TableCell style = {rowstyle} align = "center"> 
+                                <Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
+                                    <Button onClick={() => this.FinishQuestion(1)} variant="outlined" color="primary">
+                                        0 pts
+                                    </Button>
+                                </Box>
+                            </TableCell>
+                            <TableCell style = {rowstyle} align = "center"> 
+                                <Button onClick={() => this.FinishQuestion(2)}  variant="outlined" color="primary" disabled = {this.state.score<1}>
+                                    1 pts
+                                </Button>
+                            </TableCell>
+                            
+                        </TableRow>
+                        <TableRow key='Buttons' >
+                            <TableCell style = {rowstyle} align = "center"> 
+                                <Button onClick={() => this.FinishQuestion(3)} variant="outlined" color="primary">
+                                    0 pts
+                                </Button>
+                            </TableCell>
+                            <TableCell style = {rowstyle} align = "center"> 
+                                <Button onClick={() => this.FinishQuestion(4)}  variant="outlined" color="primary" disabled = {this.state.score<1}>
+                                    1 pts
+                                </Button>
+                            </TableCell>
+                            
+                        </TableRow>
+                    </TableBody>
+                    </Table>
+                </TableContainer>
+               
+            </div>
         );
     }
 
