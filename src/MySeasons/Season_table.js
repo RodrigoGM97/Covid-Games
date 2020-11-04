@@ -364,7 +364,7 @@ const useStyles = makeStyles((theme) => ({
                       key={row.topic}
                     >
                       <TableCell component="th" id={labelId} scope="row" align="center">
-                        {row.topic}
+                        {row.seasonID}
                       </TableCell>
                       <TableCell align="center">{row.points}</TableCell>
                       <TableCell align="center">{row.daysRemaining}</TableCell>
