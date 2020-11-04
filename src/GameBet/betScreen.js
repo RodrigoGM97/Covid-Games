@@ -7,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box'; 
-import { CardColumns } from 'react-bootstrap';
 
 class BetScreen extends React.Component {
     constructor(props) {
@@ -45,7 +44,7 @@ class BetScreen extends React.Component {
     {
         //query para saber si es correcta
         let correct = 1; //query
-        let result = (correct == answer);
+        let result = (correct === answer);
         if (result)
         {
             //sumar puntos en base
