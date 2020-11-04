@@ -65,7 +65,7 @@ class UserData extends React.Component {
 
     //console.log(await obj_data);
     return await axios.post('https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Tables/getSusSeasonTable', await obj_data ).then(resp => {
-            console.log("My msg answer was ", resp.data);
+            //console.log("My msg answer was ", resp.data);
             
             return resp.data;
 

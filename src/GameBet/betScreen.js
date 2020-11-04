@@ -9,9 +9,13 @@ class BetScreen extends React.Component {
         };
     }
     
+    async componentDidMount(){
+        console.log(localStorage.getItem('currentPlayID'))
+        console.log(localStorage.getItem('user'))
+    }
 
     render() {
-        console.log(localStorage.getItem('currentPlayID'))
+        
         return(
             <h1>juego</h1>
         );

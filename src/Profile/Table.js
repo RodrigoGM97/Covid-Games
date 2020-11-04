@@ -34,6 +34,7 @@ export default class DenseTable extends React.Component {
       
         resolve(var1);
       }).then(userinfo=>{
+        localStorage.setItem('user', userinfo.username);
         return userinfo.username;
       })
    
