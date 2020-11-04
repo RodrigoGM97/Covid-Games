@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box'; 
+import { CardColumns } from 'react-bootstrap';
 
 class BetScreen extends React.Component {
     constructor(props) {
@@ -89,6 +90,7 @@ class BetScreen extends React.Component {
         const rowstyle = {
             'borderBottom':'none',
             textAlign:'center',
+            //'backgroundColor':'red', 
             
         };
         const titlestyle={
@@ -101,9 +103,11 @@ class BetScreen extends React.Component {
             width:'100%',
             height:'100%'
         }
-        const answerstyle = {
-            height:'100%',
-            //'background-color':'cyan'
+
+        const answerstyle={
+            height: '70vh',
+            marginRight: '5%',
+            marginLeft: '5%'
         }
         return (this.isbetting)?(
             <div style = {mystyle}>
@@ -149,21 +153,23 @@ class BetScreen extends React.Component {
             </div>
            
         ):(
-            <div className = "full-screen">
-                <p>game time</p>
-                <TableContainer>
-                    <Table  size="small" aria-label="a dense table">
+            <div style= {answerstyle}>
+                <div style = {titlestyle}>
+                    <h1>Game Time</h1>
+                </div>
+                <TableContainer style = {{height: '100%'}}>
+                    <Table aria-label="a dense table" style={{height:'100%'}}>
                     <TableBody>
-                        <TableRow key='Buttons' >
-                            <TableCell style = {rowstyle} align = "center"> 
+                        <TableRow key='Buttons'>
+                            <TableCell align = "center" style= {rowstyle}> 
                                 <Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
-                                    <Button onClick={() => this.FinishQuestion(1)} variant="outlined" color="primary">
+                                    <Button style= {buttonstyle} onClick={() => this.FinishQuestion(1)} variant="outlined" color="primary">
                                         0 pts
                                     </Button>
                                 </Box>
                             </TableCell>
                             <TableCell style = {rowstyle} align = "center"> 
-                                <Button onClick={() => this.FinishQuestion(2)}  variant="outlined" color="primary" disabled = {this.state.score<1}>
+                                <Button style= {buttonstyle} onClick={() => this.FinishQuestion(2)}  variant="outlined" color="primary">
                                     1 pts
                                 </Button>
                             </TableCell>
@@ -171,12 +177,12 @@ class BetScreen extends React.Component {
                         </TableRow>
                         <TableRow key='Buttons' >
                             <TableCell style = {rowstyle} align = "center"> 
-                                <Button onClick={() => this.FinishQuestion(3)} variant="outlined" color="primary">
+                                <Button style= {buttonstyle} onClick={() => this.FinishQuestion(3)} variant="outlined" color="primary">
                                     0 pts
                                 </Button>
                             </TableCell>
                             <TableCell style = {rowstyle} align = "center"> 
-                                <Button onClick={() => this.FinishQuestion(4)}  variant="outlined" color="primary" disabled = {this.state.score<1}>
+                                <Button style= {buttonstyle} onClick={() => this.FinishQuestion(4)}  variant="outlined" color="primary">
                                     1 pts
                                 </Button>
                             </TableCell>
@@ -185,7 +191,6 @@ class BetScreen extends React.Component {
                     </TableBody>
                     </Table>
                 </TableContainer>
-               
             </div>
         );
     }
