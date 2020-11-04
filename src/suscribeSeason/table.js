@@ -143,7 +143,7 @@ async function suscribeToSeason(row) {
    return await axios.post('https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/subscribeplayertoseason', await obj_data ).then(resp => {
             console.log("My msg answer was ", resp.data);
             dataToRow();
-            window.location = '/My seasons';
+            window.location = '/My Profile';
             return resp.data;
 
             }).catch(error =>{console.log(error)});   
