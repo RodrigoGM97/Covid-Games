@@ -17,7 +17,6 @@ import Switch from '@material-ui/core/Switch';
 import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { Auth } from 'aws-amplify';
-import {useHistory} from 'react-router-dom';
 
 class UserData extends React.Component {
   constructor(props) {
