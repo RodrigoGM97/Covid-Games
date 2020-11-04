@@ -126,8 +126,10 @@ function createData(topic, points, daysRemaining, seasonID) {
   return { topic, points, daysRemaining, seasonID };
 }
 
-async function susribeToSeason(row) {
+async function playGame(row) {
   console.log(row)
+  localStorage.setItem('currentPlayID', row.seasonID);
+  window.location = '/Game Bet';
   
 }
 
@@ -369,7 +371,7 @@ const useStyles = makeStyles((theme) => ({
                       <TableCell align="center">{row.points}</TableCell>
                       <TableCell align="center">{row.daysRemaining}</TableCell>
                       <TableCell>
-                        <Button variant="contained" color="primary" onClick={() => susribeToSeason(row)}>Play</Button>
+                        <Button variant="contained" color="primary" onClick={() => playGame(row)}>Play</Button>
                       </TableCell>
                     </TableRow>
                   );

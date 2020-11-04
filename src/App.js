@@ -12,6 +12,7 @@ import Profile from './Profile/Profile';
 import suscribeSeason from './suscribeSeason/suscribeSeason';
 import MySeasons from './MySeasons/MySeasons';
 import Summary from './SeasonSummary/Summary';
+import GameBet from './GameBet/GameBet';
 
 
 
@@ -26,6 +27,7 @@ function App() {
         <Route exact path='/Suscribe to Seasons' component={suscribeSeason} />
         <Route exact path='/My Seasons' component={MySeasons} />
         <Route exact path='/My Season Summary' component={Summary} />
+        <Route exact path='/Game Bet' component={GameBet} />
       </div>
     </BrowserRouter>
        
