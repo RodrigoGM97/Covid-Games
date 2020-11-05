@@ -22,6 +22,7 @@ class BetScreen extends React.Component {
         const obj_data = {
             "seasonID": localStorage.getItem('currentPlayID'),
             "userName": localStorage.getItem('user'),
+            "topic": localStorage.getItem('topic'),
             "response": {}
           }
         // https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Play/getPlayerPointsforSeason
