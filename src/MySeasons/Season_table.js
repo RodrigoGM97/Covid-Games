@@ -129,6 +129,7 @@ function createData(topic, points, daysRemaining, seasonID) {
 async function playGame(row) {
   console.log(row)
   localStorage.setItem('currentPlayID', row.seasonID);
+  localStorage.setItem('topic', row.topic);
   window.location = '/Game Bet';
   
 }
