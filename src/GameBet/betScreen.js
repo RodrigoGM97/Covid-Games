@@ -53,24 +53,37 @@ class BetScreen extends React.Component {
 
             }).catch(error =>{console.log(error)});    
     }
-    ChooseOption(qty)
+    async ChooseOption(qty)
     {
         localStorage.setItem('betQty', qty);
-        let score_ = this.state.score;
+        //let score_ = this.state.score;
+        let userinfo = await this.getUserScore();
         this.isbetting = false;
-        this.setState({score:score_,});
+        let question = await this.getQuestion();
+        this.setState({
+            score: await userinfo[0].SCORE, 
+            question: await question.QUESTION, 
+            op1: await question.OPTION1, 
+            op2: await question.OPTION2, 
+            op3: await question.OPTION3,
+            op4: await question.OPTION4,
+            correct_answer: await question.ANSWER,
+        });
+    
         //console.log("my state is now: ", this.state);
 
     }
+    
     FinishQuestion(answer)
     {
         //query para saber si es correcta
-        let correct = 1; //query
+        let correct = this.state.correct_answer; //query
+        console.log("answer should be: ", this.state.correct_answer);
         let result = (correct === answer);
         if (result)
         {
             //sumar puntos en base
-            
+            console.log("Correct answer entered");
             // fetchear nuevo score
             let new_score = 100;
             //actualizar state con score. 
@@ -80,6 +93,7 @@ class BetScreen extends React.Component {
         }
         else
         {
+            console.log("Incorrect answer entered");
             //sumar puntos en base
             
             // fetchear nuevo score
@@ -95,6 +109,7 @@ class BetScreen extends React.Component {
     async componentDidMount(){
         let userinfo = await this.getUserScore();
         let question = await this.getQuestion();
+        console.log("Llamando al Component did mount");
         this.setState({
             score: await userinfo[0].SCORE, 
             question: await question.QUESTION, 
