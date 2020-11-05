@@ -14,15 +14,36 @@ class BetScreen extends React.Component {
         this.isbetting=true;
         this.state = {
             score: 1,
+            question: null,
+            op1: null,
+            op2: null,
+            op3: null,
+            op4: null,
+            correct_answer: null,
 
         };
     }
+
+    async getQuestion()
+    { 
+        const obj_data = {
+            "periodID": localStorage.getItem('currentPlayID'),
+            "userName": localStorage.getItem('user'),
+            "topic": localStorage.getItem('topic'),
+            "response": {}
+          }
+        // https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Play/getPlayerPointsforSeason
+        return await axios.post('https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Play/getQuestion', obj_data ).then(resp => {
+            return JSON.parse(resp.data);
+
+            }).catch(error =>{console.log(error)});    
+    }
+    
     async getUserScore()
     { 
         const obj_data = {
             "seasonID": localStorage.getItem('currentPlayID'),
             "userName": localStorage.getItem('user'),
-            "topic": localStorage.getItem('topic'),
             "response": {}
           }
         // https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Play/getPlayerPointsforSeason
@@ -38,7 +59,7 @@ class BetScreen extends React.Component {
         let score_ = this.state.score;
         this.isbetting = false;
         this.setState({score:score_,});
-        console.log("my state is now: ", this.state);
+        //console.log("my state is now: ", this.state);
 
     }
     FinishQuestion(answer)
@@ -73,7 +94,18 @@ class BetScreen extends React.Component {
 
     async componentDidMount(){
         let userinfo = await this.getUserScore();
-        this.setState({score: await userinfo[0].SCORE});
+        let question = await this.getQuestion();
+        this.setState({
+            score: await userinfo[0].SCORE, 
+            question: await question.QUESTION, 
+            op1: await question.OPTION1, 
+            op2: await question.OPTION2, 
+            op3: await question.OPTION3,
+            op4: await question.OPTION4,
+            correct_answer: await question.ANSWER,
+        });
+        //console.log(await question);
+        //this.setState({question: await question[0].QUESTION_ID});
     }
 
     
@@ -108,6 +140,12 @@ class BetScreen extends React.Component {
             height: '70vh',
             marginRight: '5%',
             marginLeft: '5%'
+        }
+
+        const rowanswerstyle={
+            width: '50%',
+            'borderBottom':'none',
+            textAlign:'center',
         }
         return (this.isbetting)?(
             <div style = {mystyle}>
@@ -155,35 +193,35 @@ class BetScreen extends React.Component {
         ):(
             <div style= {answerstyle}>
                 <div style = {titlestyle}>
-                    <h1>Game Time</h1>
+                    <h1>{this.state.question}</h1>
                 </div>
                 <TableContainer style = {{height: '100%'}}>
                     <Table aria-label="a dense table" style={{height:'100%'}}>
                     <TableBody>
                         <TableRow key='Buttons'>
-                            <TableCell align = "center" style= {rowstyle}> 
+                            <TableCell align = "center" style= {rowanswerstyle}> 
                                 <Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
                                     <Button style= {buttonstyle} onClick={() => this.FinishQuestion(1)} variant="outlined" color="primary">
-                                        0 pts
+                                        {this.state.op1}
                                     </Button>
                                 </Box>
                             </TableCell>
-                            <TableCell style = {rowstyle} align = "center"> 
+                            <TableCell style = {rowanswerstyle} align = "center"> 
                                 <Button style= {buttonstyle} onClick={() => this.FinishQuestion(2)}  variant="outlined" color="primary">
-                                    1 pts
+                                    {this.state.op2}
                                 </Button>
                             </TableCell>
                             
                         </TableRow>
                         <TableRow key='Buttons' >
-                            <TableCell style = {rowstyle} align = "center"> 
+                            <TableCell style = {rowanswerstyle} align = "center"> 
                                 <Button style= {buttonstyle} onClick={() => this.FinishQuestion(3)} variant="outlined" color="primary">
-                                    0 pts
+                                    {this.state.op3}
                                 </Button>
                             </TableCell>
-                            <TableCell style = {rowstyle} align = "center"> 
+                            <TableCell style = {rowanswerstyle} align = "center"> 
                                 <Button style= {buttonstyle} onClick={() => this.FinishQuestion(4)}  variant="outlined" color="primary">
-                                    1 pts
+                                    {this.state.op4}
                                 </Button>
                             </TableCell>
                             
