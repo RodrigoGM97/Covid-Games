@@ -2,7 +2,7 @@ from __future__ import print_function
 import cx_Oracle
 import boto3
 import json
-import random
+import unidecode
 
 def dictFact(cursor):
     cols = [m[0] for m in cursor.description]
@@ -30,24 +30,46 @@ def lambda_handler(event, context):
     connection = cx_Oracle.connect("ADMIN", "ADMIN123456", dsn, encoding="UTF-8")
     cur = connection.cursor()
     
+    query = """
+    DECLARE
+    V_Q VARCHAR2(100);
+    V_OP1 VARCHAR2(100);
+    V_OP2 VARCHAR2(100);
+    V_OP3 VARCHAR2(100);
+    V_OP4 VARCHAR2(100);
+    V_ANSWER NUMBER;
 
-    #result = cur.callfunc('FETCH_QUESTION', periodID)
-    #print(result)
-    #return True
+    BEGIN
+    FETCH_QUESTION(1, V_Q, V_OP1, V_OP2, V_OP3, V_OP4, V_ANSWER);
+    :QUESTION :=V_Q;
+    :OP1 :=V_OP1;
+    :OP2 :=V_OP2;
+    :OP3 := V_OP3;
+    :OP4 := V_OP4;
+    :ANSWER :=V_ANSWER;
+    END;
+    """
 
-    query = "SELECT Q.* FROM QUESTION Q WHERE Q.TOPIC = '" + topic + "'"
-    cur.execute(query)
-
-    results = []
-    cur.rowfactory = dictFact(cur)
-
-    for result in cur.fetchall():
-        results.append(result)
-        
     
-    results = results[random.randint(0,len(results) -1 )]
-    connection.close()
-    jsonResults = json.dumps(results)
+    question = cur.var(cx_Oracle.STRING)
+    op1 = cur.var(cx_Oracle.STRING)
+    op2 = cur.var(cx_Oracle.STRING)
+    op3 = cur.var(cx_Oracle.STRING)
+    op4 = cur.var(cx_Oracle.STRING)
+    answer = cur.var(cx_Oracle.NUMBER)
+
+    cur.execute(query, {'QUESTION':question, 'OP1':op1, 'OP2':op2, 'OP3':op3, 'OP4':op4, 'ANSWER':answer})
+    #print(question.getvalue())
+    
+    j = {
+        "QUESTION": unidecode.unidecode(question.getvalue()),
+        "OPTION1": unidecode.unidecode(op1.getvalue()),
+        "OPTION2": unidecode.unidecode(op2.getvalue()),
+        "OPTION3": unidecode.unidecode(op3.getvalue()),
+        "OPTION4": unidecode.unidecode(op4.getvalue()),
+        "ANSWER": answer.getvalue()
+    }
+    jsonResults = json.dumps(j)
     print(jsonResults)
     return jsonResults
 
