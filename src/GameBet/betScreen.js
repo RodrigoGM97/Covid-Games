@@ -7,14 +7,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box'; 
-import { Alert, AlertTitle } from '@material-ui/lab';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import { SettingsPowerRounded, ThreeSixtySharp } from '@material-ui/icons';
 
 class BetScreen extends React.Component {
     constructor(props) {
@@ -262,11 +259,13 @@ class BetScreen extends React.Component {
                     aria-describedby="alert-dialog-description"
                     style = {confirmationstyle}
                 >
-                    <DialogTitle id="alert-dialog-title"><h1>Your answer was {this.question_result}</h1></DialogTitle>
+                    <DialogTitle id="alert-dialog-title">Your answer was {this.question_result}</DialogTitle>
                     <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        <h2>Your answer: {this.chosen_answer}</h2>
-                        <h2>The correct answer was: {this.answer_detail}</h2>
+                        Your answer: {this.chosen_answer}
+                    </DialogContentText>
+                    <DialogContentText id="alert-dialog-description">
+                        The correct answer was: {this.answer_detail}
                     </DialogContentText>
                     </DialogContent>
                     <DialogActions>
