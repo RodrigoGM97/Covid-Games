@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box'; 
+import { Alert } from 'react-bootstrap';
 
 class BetScreen extends React.Component {
     constructor(props) {
@@ -53,26 +54,58 @@ class BetScreen extends React.Component {
 
             }).catch(error =>{console.log(error)});    
     }
-    ChooseOption(qty)
+    async ChooseOption(qty)
     {
         localStorage.setItem('betQty', qty);
-        let score_ = this.state.score;
+        //let score_ = this.state.score;
+        let userinfo = await this.getUserScore();
         this.isbetting = false;
-        this.setState({score:score_,});
+        let question = await this.getQuestion();
+        this.setState({
+            score: await userinfo[0].SCORE, 
+            question: await question.QUESTION, 
+            op1: await question.OPTION1, 
+            op2: await question.OPTION2, 
+            op3: await question.OPTION3,
+            op4: await question.OPTION4,
+            correct_answer: await question.ANSWER,
+        });
+    
         //console.log("my state is now: ", this.state);
 
     }
-    FinishQuestion(answer)
+    
+    async FinishQuestion(answer)
     {
         //query para saber si es correcta
-        let correct = 1; //query
+        let correct = this.state.correct_answer; //query
+        console.log("answer should be: ", this.state.correct_answer);
         let result = (correct === answer);
+
+        const obj_data = {
+            "seasonID": localStorage.getItem('currentPlayID'),
+            "userName": localStorage.getItem('user'),
+            "correctAnswer": result,
+            "betAmount": localStorage.getItem('betQty')
+          }
+        //fetch new score
+        let new_score_data = await axios.post('https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Play/getPlayerPointsforSeason', obj_data ).then(resp => {
+            
+            return JSON.parse(resp.data);
+
+            }).catch(error =>{console.log(error)});    
+
         if (result)
         {
-            //sumar puntos en base
             
+            //sumar puntos en base
+            alert("Correct answer entered");
             // fetchear nuevo score
             let new_score = 100;
+            pos(result, (bet))
+            // 0pts --> 2pts
+            //1pts --> 4 pts
+            //2 pts --> 6 pts
             //actualizar state con score. 
             this.isbetting=true;
             
@@ -80,6 +113,7 @@ class BetScreen extends React.Component {
         }
         else
         {
+            console.log("Incorrect answer entered");
             //sumar puntos en base
             
             // fetchear nuevo score
@@ -95,6 +129,7 @@ class BetScreen extends React.Component {
     async componentDidMount(){
         let userinfo = await this.getUserScore();
         let question = await this.getQuestion();
+        console.log("Llamando al Component did mount");
         this.setState({
             score: await userinfo[0].SCORE, 
             question: await question.QUESTION, 
