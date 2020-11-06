@@ -7,7 +7,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box'; 
-import { Alert } from 'react-bootstrap';
+import { Alert, AlertTitle } from '@material-ui/lab';
+
 
 class BetScreen extends React.Component {
     constructor(props) {
@@ -89,12 +90,14 @@ class BetScreen extends React.Component {
             "betAmount": localStorage.getItem('betQty')
           }
         //fetch new score
-        let new_score_data = await axios.post('https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Play/getPlayerPointsforSeason', obj_data ).then(resp => {
+        let new_score_data = await axios.post('https://bzhti9x5ia.execute-api.us-east-1.amazonaws.com/covid-games/Play/updatePlayerScore', obj_data ).then(resp => {
             
             return JSON.parse(resp.data);
 
             }).catch(error =>{console.log(error)});    
-
+        console.log("New score info: ", new_score_data);
+        this.isbetting = true;
+        this.setState({score: await new_score_data.newScore})
         if (result)
         {
             
@@ -102,26 +105,29 @@ class BetScreen extends React.Component {
             alert("Correct answer entered");
             // fetchear nuevo score
             let new_score = 100;
-            pos(result, (bet))
+
+        
             // 0pts --> 2pts
             //1pts --> 4 pts
             //2 pts --> 6 pts
             //actualizar state con score. 
-            this.isbetting=true;
+            //this.isbetting=true;
             
-            this.setState({score:new_score})
+            //this.setState({score:new_score})
         }
         else
         {
+            alert("Incorrect answer entered");
+            
             console.log("Incorrect answer entered");
             //sumar puntos en base
             
             // fetchear nuevo score
-            let new_score = 40;
-            //actualizar state con score. 
-            this.isbetting=true;
             
-            this.setState({score:new_score})
+            //actualizar state con score. 
+            //this.isbetting=true;
+            
+            //this.setState({score:new_score})
         }
         
     }
@@ -183,6 +189,7 @@ class BetScreen extends React.Component {
             textAlign:'center',
         }
         return (this.isbetting)?(
+            
             <div style = {mystyle}>
                 <div style = {titlestyle}>
                     <h1>Choose an amount to bet:</h1>
