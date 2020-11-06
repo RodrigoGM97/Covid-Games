@@ -8,12 +8,26 @@ import axios from 'axios';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box'; 
 import { Alert, AlertTitle } from '@material-ui/lab';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { SettingsPowerRounded, ThreeSixtySharp } from '@material-ui/icons';
 
 class BetScreen extends React.Component {
     constructor(props) {
         super(props);
         this.isbetting=true;
+        this.answer_detail = '';
+        this.chosen_answer = '';
+        this.background_color = '';
+        this.question_result = '';
+        this.theme = {palette: {
+            primary: 'green',
+          },
+        };
         this.state = {
             score: 1,
             question: null,
@@ -22,10 +36,26 @@ class BetScreen extends React.Component {
             op3: null,
             op4: null,
             correct_answer: null,
+            open : false
 
         };
     }
+    async confirmResult(continue_playing, event){
+        let userinfo = await this.getUserScore();
 
+        if (continue_playing)
+        {
+
+            
+            this.isbetting = true;
+            this.setState({score: await userinfo[0].SCORE, open:false});
+        }
+        else{
+            window.location = 'My Profile'
+        }
+        
+
+    }
     async getQuestion()
     { 
         const obj_data = {
@@ -80,9 +110,22 @@ class BetScreen extends React.Component {
     {
         //query para saber si es correcta
         let correct = this.state.correct_answer; //query
+        let correct_text = this.state["op" + correct.toString()]
+        let chosen_text = this.state["op" + answer.toString()]
+        this.answer_detail = correct_text;
+        this.chosen_answer = chosen_text;
         console.log("answer should be: ", this.state.correct_answer);
         let result = (correct === answer);
-
+        
+        if (result){
+            this.background_color = 'green';
+            this.question_result = 'correct!'
+        }
+        else
+        {
+            this.background_color = 'red';
+            this.question_result = 'incorrect!';
+        }
         const obj_data = {
             "seasonID": localStorage.getItem('currentPlayID'),
             "userName": localStorage.getItem('user'),
@@ -96,39 +139,8 @@ class BetScreen extends React.Component {
 
             }).catch(error =>{console.log(error)});    
         console.log("New score info: ", new_score_data);
-        this.isbetting = true;
-        this.setState({score: await new_score_data.newScore})
-        if (result)
-        {
-            
-            //sumar puntos en base
-            alert("Correct answer entered");
-            // fetchear nuevo score
-            let new_score = 100;
-
-        
-            // 0pts --> 2pts
-            //1pts --> 4 pts
-            //2 pts --> 6 pts
-            //actualizar state con score. 
-            //this.isbetting=true;
-            
-            //this.setState({score:new_score})
-        }
-        else
-        {
-            alert("Incorrect answer entered");
-            
-            console.log("Incorrect answer entered");
-            //sumar puntos en base
-            
-            // fetchear nuevo score
-            
-            //actualizar state con score. 
-            //this.isbetting=true;
-            
-            //this.setState({score:new_score})
-        }
+    
+        this.setState({score: await new_score_data.newScore, open:true})
         
     }
 
@@ -144,6 +156,7 @@ class BetScreen extends React.Component {
             op3: await question.OPTION3,
             op4: await question.OPTION4,
             correct_answer: await question.ANSWER,
+            open:false
         });
         //console.log(await question);
         //this.setState({question: await question[0].QUESTION_ID});
@@ -188,6 +201,14 @@ class BetScreen extends React.Component {
             'borderBottom':'none',
             textAlign:'center',
         }
+        const confirmationstyle = {
+            backgroundColor : this.background_color,
+            textAlign:'center',
+            justifyContent:'center',
+            display:'block',
+            alignItems:'center'
+        }
+
         return (this.isbetting)?(
             
             <div style = {mystyle}>
@@ -198,7 +219,7 @@ class BetScreen extends React.Component {
                 <TableContainer>
                     <Table  size="small" aria-label="a dense table">
                     <TableBody>
-                        <TableRow key='Buttons' >
+                        <TableRow key={[1,2,3]} >
                             <TableCell style = {rowstyle} align = "center"> 
                                 <Button onClick={() => this.ChooseOption(0)} variant="outlined" color="primary">
                                     0 pts
@@ -215,7 +236,7 @@ class BetScreen extends React.Component {
                                 </Button>
                             </TableCell>
                         </TableRow>
-                        <TableRow key ='Info' style = {rowstyle}>
+                        <TableRow key={[4,5,6]} style = {rowstyle}>
                             <TableCell style = {rowstyle} align = "center"> 
                                 <p>Earn 2 pts!</p>
                             </TableCell>
@@ -234,13 +255,48 @@ class BetScreen extends React.Component {
            
         ):(
             <div style= {answerstyle}>
+               <Dialog
+                    open={this.state.open}
+                    //onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    style = {confirmationstyle}
+                >
+                    <DialogTitle id="alert-dialog-title"><h1>Your answer was {this.question_result}</h1></DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        <h2>Your answer: {this.chosen_answer}</h2>
+                        <h2>The correct answer was: {this.answer_detail}</h2>
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button 
+                         style={{
+                            backgroundColor: "#21b6ae",
+                            align:'center',
+                            justifyContent : 'center',
+                            textAlign : 'center',
+                            display:'flex'
+
+                        }}
+                        variant="contained"
+                        
+                        onClick={(e) => this.confirmResult(true,e)}  autoFocus>
+                            Continue Playing
+                        </Button>
+                   
+                    <Button onClick={(e) => this.confirmResult(false,e)} color="secondary" autoFocus variant = 'contained' align='center'>
+                        Return to Profile
+                    </Button>
+                    </DialogActions>
+                </Dialog>
                 <div style = {titlestyle}>
                     <h1>{this.state.question}</h1>
                 </div>
                 <TableContainer style = {{height: '100%'}}>
                     <Table aria-label="a dense table" style={{height:'100%'}}>
                     <TableBody>
-                        <TableRow key='Buttons'>
+                        <TableRow key={[1,2,3]}>
                             <TableCell align = "center" style= {rowanswerstyle}> 
                                 <Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
                                     <Button style= {buttonstyle} onClick={() => this.FinishQuestion(1)} variant="outlined" color="primary">
@@ -255,7 +311,7 @@ class BetScreen extends React.Component {
                             </TableCell>
                             
                         </TableRow>
-                        <TableRow key='Buttons' >
+                        <TableRow key={[4,5,6]} >
                             <TableCell style = {rowanswerstyle} align = "center"> 
                                 <Button style= {buttonstyle} onClick={() => this.FinishQuestion(3)} variant="outlined" color="primary">
                                     {this.state.op3}
