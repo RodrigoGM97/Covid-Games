@@ -60,6 +60,10 @@ def lambda_handler(event, context):
         cur.execute(query)
         query = "COMMIT"
         cur.execute(query)
+        query= "update player set highscore = (select max(score) from game_is_played where player_name = '" + userName + "' ) where username = '" + userName + "'"
+        cur.execute(query)
+        query = "COMMIT"
+        cur.execute(query)
 
         
         j = {
@@ -76,9 +80,9 @@ def lambda_handler(event, context):
 
 # lambda_handler(json.loads("""
 # {
-#    "seasonID": 1,
+#    "seasonID": 11,
 #    "userName": "ADMIN",
-#    "correctAnswer": false,
+#    "correctAnswer": true,
 #    "betAmount": 2,
 #    "response": {}
 # }"""), None)
